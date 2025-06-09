@@ -1,0 +1,269 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Assignment and Study Plan</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather&family=Roboto&display=swap" rel="stylesheet">
+
+  <!-- html2pdf.js for PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <!-- html2canvas for JPG -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Merriweather', serif;
+      margin: 0;
+      padding: 40px;
+      background: #fff;
+      color: #1B5E20;
+    }
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      padding: 1cm;
+      margin: auto;
+      border: 3px solid #2e7d32;
+      background: #f9fff9;
+      box-sizing: border-box;
+      box-shadow: 0 0 15px rgba(46, 125, 50, 0.3);
+      border-radius: 10px;
+    }
+    .school-header {
+      text-align: center;
+      margin-bottom: 10px;
+      font-family: 'Roboto', sans-serif;
+    }
+    .school-header img {
+      width: 110px;
+      margin-bottom: 10px;
+    }
+    .school-header h1 {
+      font-size: 24px;
+      margin: 0;
+      color: #2e7d32;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .report-title {
+      font-size: 20px;
+      margin: 5px 0;
+      font-weight: 600;
+    }
+    .address, .org-name {
+      font-size: 14px;
+      margin: 3px 0;
+      font-style: italic;
+      color: #3a6f3a;
+    }
+    .meta-section {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin: 30px 0 15px;
+      font-size: 16px;
+    }
+    .meta-field {
+      width: 48%;
+    }
+    .meta-field label {
+      font-weight: 700;
+      display: block;
+      margin-bottom: 5px;
+    }
+    .meta-field input {
+      border: none;
+      border-bottom: 2px solid #2e7d32;
+      font-size: 16px;
+      width: 100%;
+      background: transparent;
+      outline: none;
+      font-family: 'Roboto', sans-serif;
+      padding: 4px 6px;
+      color: #1b5e20;
+    }
+    h2 {
+      margin-top: 30px;
+      color: #1B5E20;
+      font-size: 20px;
+      border-bottom: 2px solid #4caf50;
+      padding-bottom: 6px;
+      font-weight: 700;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 16px;
+      table-layout: fixed;
+      word-wrap: break-word;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    th, td {
+      border: 1.5px solid #4caf50;
+      padding: 10px 15px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background-color: #c8e6c9;
+      color: #2e7d32;
+      font-weight: 700;
+    }
+    td[contenteditable="true"] {
+      background-color: #e8f5e9;
+      word-break: break-word;
+      min-height: 40px;
+      vertical-align: top;
+      outline: none;
+      cursor: text;
+    }
+    td[contenteditable="true"]:empty:before {
+      content: attr(placeholder);
+      color: #999;
+      font-style: italic;
+      user-select: none;
+    }
+    .table-controls {
+      text-align: right;
+      margin: 5px 0 20px;
+    }
+    button {
+      background-color: #4caf50;
+      color: white;
+      font-size: 14px;
+      padding: 8px 15px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-left: 5px;
+      transition: background-color 0.3s ease;
+      font-family: 'Roboto', sans-serif;
+    }
+    button:hover {
+      background-color: #388e3c;
+    }
+    .no-print { display: block; }
+    @media print {
+      .no-print { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+<div class="page" id="report">
+  <div class="school-header">
+    <h1>St. Joseph’s Aksharadhama ICSE School</h1>
+    <div class="report-title">Assignment and Study Plan</div>
+    <div class="address">NH-206, Sagar road, Gadikoppa, Shivamogga - 577 205</div>
+    <div class="org-name">Shantiniketan Charitable Society (R.)</div>
+  </div>
+  <div class="meta-section">
+    <div class="meta-field"><label for="date">Date:</label><input type="date" id="date" /></div>
+    <div class="meta-field"><label for="day">Day:</label><input type="text" id="day" placeholder="e.g., Monday" /></div>
+  </div>
+  <h2>Assignment</h2>
+  <table id="assignment-table"><thead><tr><th style="width: 25%;">Subject</th><th style="width: 75%;">Description</th></tr></thead><tbody><tr><td contenteditable="true" placeholder="Subject"></td><td contenteditable="true" placeholder="Description"></td></tr></tbody></table>
+  <div class="table-controls"><button onclick="addRow('assignment-table')">+ Add Row</button><button onclick="removeRow('assignment-table')">− Remove Row</button></div>
+  <h2>Study Plan</h2>
+  <table id="study-table"><thead><tr><th style="width: 25%;">Subject</th><th style="width: 75%;">Description</th></tr></thead><tbody><tr><td contenteditable="true" placeholder="Subject"></td><td contenteditable="true" placeholder="Description"></td></tr></tbody></table>
+  <div class="table-controls"><button onclick="addRow('study-table')">+ Add Row</button><button onclick="removeRow('study-table')">− Remove Row</button></div>
+  <div class="table-controls no-print" style="text-align:center;">
+    <button onclick="downloadAsPDF()">Download as PDF</button>
+    <button onclick="downloadAsJPG()">Download as JPG</button>
+  </div>
+</div>
+<script>
+function addRow(tableId) {
+  const tbody = document.getElementById(tableId).querySelector('tbody');
+  const newRow = document.createElement('tr');
+  newRow.innerHTML = `<td contenteditable="true" placeholder="Subject"></td><td contenteditable="true" placeholder="Description"></td>`;
+  tbody.appendChild(newRow);
+}
+function removeRow(tableId) {
+  const tbody = document.getElementById(tableId).querySelector('tbody');
+  if (tbody.rows.length > 1) tbody.deleteRow(-1);
+}
+document.getElementById('date').addEventListener('change', function () {
+  const date = new Date(this.value);
+  if (!isNaN(date)) document.getElementById('day').value = date.toLocaleDateString('en-US', { weekday: 'long' });
+});
+function downloadAsPDF() {
+  const element = document.getElementById('report');
+  const inputs = element.querySelectorAll('input');
+  const buttonSection = document.querySelector('.no-print');
+  const addRemoveButtons = element.querySelectorAll('.table-controls button');
+  addRemoveButtons.forEach(btn => { if (btn.textContent.includes('Add Row') || btn.textContent.includes('Remove Row')) btn.style.display = 'none'; });
+  if (buttonSection) buttonSection.style.display = 'none';
+  const pageDiv = document.querySelector('.page');
+  const originalBorder = pageDiv.style.border;
+  pageDiv.style.border = 'none';
+  inputs.forEach(input => {
+    const span = document.createElement('span');
+    span.textContent = input.value;
+    span.style.fontWeight = 'bold';
+    input.style.display = 'none';
+    input.parentNode.insertBefore(span, input);
+    input._replacementSpan = span;
+  });
+  html2pdf().set({
+    margin: [0.05, 0.05, 0.05, 0.05],
+    filename: 'Assignment_Study_Plan.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: 'cm', format: 'a4', orientation: 'portrait' }
+  }).from(element).save().then(() => {
+    addRemoveButtons.forEach(btn => { if (btn.textContent.includes('Add Row') || btn.textContent.includes('Remove Row')) btn.style.display = ''; });
+    if (buttonSection) buttonSection.style.display = '';
+    pageDiv.style.border = originalBorder;
+    inputs.forEach(input => {
+      input.style.display = '';
+      if (input._replacementSpan) {
+        input._replacementSpan.remove();
+        delete input._replacementSpan;
+      }
+    });
+  });
+}
+function downloadAsJPG() {
+  const element = document.getElementById('report');
+  const inputs = element.querySelectorAll('input');
+  const buttonSection = document.querySelector('.no-print');
+  const addRemoveButtons = element.querySelectorAll('.table-controls button');
+  addRemoveButtons.forEach(btn => { if (btn.textContent.includes('Add Row') || btn.textContent.includes('Remove Row')) btn.style.display = 'none'; });
+  if (buttonSection) buttonSection.style.display = 'none';
+  const pageDiv = document.querySelector('.page');
+  const originalBorder = pageDiv.style.border;
+  pageDiv.style.border = 'none';
+  inputs.forEach(input => {
+    const span = document.createElement('span');
+    span.textContent = input.value;
+    span.style.fontWeight = 'bold';
+    input.style.display = 'none';
+    input.parentNode.insertBefore(span, input);
+    input._replacementSpan = span;
+  });
+  html2canvas(element, { scale: 2, useCORS: true }).then(canvas => {
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL('image/jpeg', 1.0);
+    link.download = 'Assignment_Study_Plan.jpg';
+    link.click();
+    addRemoveButtons.forEach(btn => { if (btn.textContent.includes('Add Row') || btn.textContent.includes('Remove Row')) btn.style.display = ''; });
+    if (buttonSection) buttonSection.style.display = '';
+    pageDiv.style.border = originalBorder;
+    inputs.forEach(input => {
+      input.style.display = '';
+      if (input._replacementSpan) {
+        input._replacementSpan.remove();
+        delete input._replacementSpan;
+      }
+    });
+  });
+}
+</script>
+</body>
+</html>
