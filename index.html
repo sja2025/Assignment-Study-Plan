@@ -85,6 +85,13 @@
       padding: 4px 6px;
       color: #1b5e20;
     }
+   .boxed-input {
+      border: 2px solid #2e7d32 !important;
+      background-color: #e8f5e9;
+      padding: 6px;
+      border-radius: 5px;
+    }
+
     h2 {
       margin-top: 30px;
       color: #1B5E20;
@@ -161,18 +168,21 @@
     <div class="report-title">Assignment and Study Plan</div>
     
     
-  </div>
   <div class="meta-section">
-    <div class="meta-field"><label for="date">Date:</label><input type="date" id="date" /></div>
-<div class="meta-section">
-  <div class="meta-field" style="width: 100%;">
+  <div class="meta-field">
+    <label for="date">Date:</label>
+    <input type="date" id="date" />
+  </div>
+  <div class="meta-field">
     <label for="class">Class:</label>
-    <input type="text" id="class" placeholder="e.g., Class 6A" />
+    <input type="text" id="class" placeholder="e.g., Class 6A" class="boxed-input" />
+  </div>
+  <div class="meta-field">
+    <label for="day">Day:</label>
+    <input type="text" id="day" placeholder="e.g., Monday" />
   </div>
 </div>
 
-    <div class="meta-field"><label for="day">Day:</label><input type="text" id="day" placeholder="e.g., Monday" /></div>
-  </div>
   <h2>Assignment</h2>
   <table id="assignment-table"><thead><tr><th style="width: 25%;">Subject</th><th style="width: 75%;">Description</th></tr></thead><tbody><tr><td contenteditable="true" placeholder="Subject"></td><td contenteditable="true" placeholder="Description"></td></tr></tbody></table>
   <div class="table-controls"><button onclick="addRow('assignment-table')">+ Add Row</button><button onclick="removeRow('assignment-table')">− Remove Row</button></div>
@@ -241,25 +251,43 @@ function downloadAsJPG() {
   const inputs = element.querySelectorAll('input');
   const buttonSection = document.querySelector('.no-print');
   const addRemoveButtons = element.querySelectorAll('.table-controls button');
-  addRemoveButtons.forEach(btn => { if (btn.textContent.includes('Add Row') || btn.textContent.includes('Remove Row')) btn.style.display = 'none'; });
+  addRemoveButtons.forEach(btn => {
+    if (btn.textContent.includes('Add Row') || btn.textContent.includes('Remove Row'))
+      btn.style.display = 'none';
+  });
   if (buttonSection) buttonSection.style.display = 'none';
+
   const pageDiv = document.querySelector('.page');
   const originalBorder = pageDiv.style.border;
   pageDiv.style.border = 'none';
+
   inputs.forEach(input => {
     const span = document.createElement('span');
-    span.textContent = input.value;
+
+    if (input.type === 'date' && input.value) {
+      const [year, month, day] = input.value.split('-');
+      span.textContent = `${day}-${month}-${year}`;
+    } else {
+      span.textContent = input.value;
+    }
+
     span.style.fontWeight = 'bold';
     input.style.display = 'none';
     input.parentNode.insertBefore(span, input);
     input._replacementSpan = span;
   });
+
   html2canvas(element, { scale: 2, useCORS: true }).then(canvas => {
     const link = document.createElement('a');
     link.href = canvas.toDataURL('image/jpeg', 1.0);
     link.download = 'Assignment_Study_Plan.jpg';
     link.click();
-    addRemoveButtons.forEach(btn => { if (btn.textContent.includes('Add Row') || btn.textContent.includes('Remove Row')) btn.style.display = ''; });
+
+    // Revert changes
+    addRemoveButtons.forEach(btn => {
+      if (btn.textContent.includes('Add Row') || btn.textContent.includes('Remove Row'))
+        btn.style.display = '';
+    });
     if (buttonSection) buttonSection.style.display = '';
     pageDiv.style.border = originalBorder;
     inputs.forEach(input => {
